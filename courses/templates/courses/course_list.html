@@ -1,51 +1,42 @@
-{% extends 'courses/course_base.html' %} 
+{% extends 'courses/course_base.html' %}
 
 {% block title_name %}
-  LMS - Courses
+    LMS - Courses
 {% endblock title_name %}
-  
+
 {% block main_content %}
-<div class="container">
-  <div>
-    <h1>All Courses</h1>
+<h1 class="mb-4">All Courses</h1>
 
-    {% if user.user_type == 2 %}
-    <a
-      href="{% url 'courses:create' %}"
-      class="btn btn-lg btn-fill btn-success button-stretch"
-    >
-      <i class="fa fa-plus-circle" aria-hidden="true"> Create New Course</i>
+{% if user.user_type == 2 %}
+<div class="mb-4">
+    <a href="{% url 'courses:create' %}" class="btn btn-success">
+        <i class="fa fa-plus-circle"></i> Create New Course
     </a>
-    {% endif %}
-  </div>
-    <div class="card-deck">
-      {% for course_item in object_list %}
-      <div>
-      <div class="card" style="width: 18rem">
-        <div class="card-body">
-          <h5 class="card-title">{{course_item.course_name}}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{course_item.teacher}}</h6>
-          <p class="card-text">
-            {{course_item.course_description}}
-          </p>
-          <a href="{% url 'courses:detail' pk=course_item.pk %}" class="btn btn-primary card-link">More Info</a>
-          {% if user.user_type == 1 %}
-            {%if user in course_item.students.all%}
-                <a href="{% url 'courses:unenroll' pk=course_item.pk %}" class="btn btn-danger card-link">Unenroll</a>
-            {% else %}
-                <a href="{% url 'courses:enroll' pk=course_item.pk %}" class="btn btn-success card-link">Enroll</a>
-            {% endif %}
-          {% endif %}
-
-          <p>{{course_item.students.count}}
-                member{{course_item.students.count|pluralize}}</p>
-          
-              
-        </div>
-      </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endblock main_content %}
 </div>
+{% endif %}
+
+<div class="row g-4">
+    {% for course_item in object_list %}
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ course_item.course_name }}</h5>
+                <h6 class="card-subtitle text-muted">{{ course_item.teacher }}</h6>
+                <p class="card-text mt-2">{{ course_item.course_description }}</p>
+                <a href="{% url 'courses:detail' pk=course_item.pk %}" class="btn btn-primary btn-sm">More Info</a>
+                {% if user.user_type == 1 %}
+                    {% if user in course_item.students.all %}
+                    <a href="{% url 'courses:unenroll' pk=course_item.pk %}" class="btn btn-danger btn-sm">Unenroll</a>
+                    {% else %}
+                    <a href="{% url 'courses:enroll' pk=course_item.pk %}" class="btn btn-success btn-sm">Enroll</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <small>{{ course_item.students.count }} member{{ course_item.students.count|pluralize }}</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock main_content %}

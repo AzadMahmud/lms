@@ -1,87 +1,77 @@
-{% extends 'base.html' %}
-
-
-{% block title %}
-    LMS - Profile
-{% endblock title %}
-    
-
+{% extends 'base.html' %} {% block title %}LMS - Profile{% endblock title %} {%
 {% block body_content %}
-    <div class="container">
-        {% if user.is_authenticated %}
-            <i class="fa fa-user-circle-o fa-5x" aria-hidden="true"></i>
-            <h1>Username: {{user.username}}</h1>
-            <h4>First Name: {{user.first_name}}</h4>
-            <h4>Last Name: {{user.last_name}}</h4>
-            
-            <h4>Type: 
-            {% if user.user_type == 1 %}
-                Student
-            {% else %}
-                Teacher                
-            {% endif %}
-            </h4>
-            <h5>Email: {{user.email}}</h5>
-            
-            {% if user.user_type == 2 %}
-                <div class="card-deck">
-                {% for course in course_list %}
-                    
-                    {% if course.teacher.id == user.id %}
-                        <div class="card" style="width: 18rem">
-                            <div class="card-body">
-                            <h5 class="card-title">{{course.course_name}}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{course.teacher}}</h6>
-                            <p class="card-text">
-                                {{course.course_description}}
-                            </p>
-                            <a href="{% url 'courses:detail' pk=course.pk %}" 
-                            class="btn btn-primary card-link">More Info</a>
-                            <p>{{course.students.count}}
-                                    member{{course.students.count|pluralize}}</p>
-                            </div>
-                        </div>
-                    {% endif %}
-                
-                {% empty %}
-                    <div class="jumbotron">
-                        You have not created any courses yet.
-                    </div>
-                {% endfor %}
-                </div>
-            {% elif user.user_type == 1 %}
-            <div class="card-deck">
-                {% for course in course_list %}
-                    
-                    {% if user in course.students.all %}
-                        <div class="card" style="width: 18rem">
-                            <div class="card-body">
-                            <h5 class="card-title">{{course.course_name}}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{course.teacher}}</h6>
-                            <p class="card-text">
-                                {{course.course_description}}
-                            </p>
-                            <a href="{% url 'courses:detail' pk=course.pk %}" class="btn btn-primary card-link">More Info</a>
-                            <a href="{% url 'courses:unenroll' pk=course.pk %}" class="btn btn-danger card-link">Unenroll</a>
-                            <p>{{course.students.count}}
-                                    member{{course.students.count|pluralize}}</p>
-                            </div>
-                        </div>
-                    {% endif %}
-               
-                {% empty %}
-                    <div class="jumbotron">
-                        You have not enrolled in any courses yet.
-                    </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-        {% else %}
-            <div class="jumbotron">
-                You cannot access this profile.
-            </div>
-        {% endif %}
+<div class="container py-5">
+  {% if user.is_authenticated %}
+  <div class="text-center mb-4">
+    <i class="fa fa-user-circle fa-5x text-primary"></i>
+    <h1 class="mt-3">{{ user.username }}</h1>
+    <p class="text-muted">{{ user.first_name }} {{ user.last_name }}</p>
+  </div>
 
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Profile Information</h5>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p>
+        <strong>Type:</strong>
+        {% if user.user_type == 1 %} Student {% else %} Teacher {% endif %}
+      </p>
     </div>
+  </div>
+
+  {% if user.user_type == 2 %}
+  <h3 class="mb-4">Your Courses</h3>
+  <div class="row g-4">
+    {% for course in course_list %} {% if course.teacher.id == user.id %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ course.course_name }}</h5>
+          <p class="card-text text-muted">{{ course.course_description }}</p>
+          <p><strong>Students:</strong> {{ course.students.count }}</p>
+          <a
+            href="{% url 'courses:detail' pk=course.pk %}"
+            class="btn btn-primary"
+            >More Info</a
+          >
+        </div>
+      </div>
+    </div>
+    {% endif %} {% empty %}
+    <div class="alert alert-warning">You have not created any courses yet.</div>
+    {% endfor %}
+  </div>
+  {% elif user.user_type == 1 %}
+  <h3 class="mb-4">Enrolled Courses</h3>
+  <div class="row g-4">
+    {% for course in course_list %} {% if user in course.students.all %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ course.course_name }}</h5>
+          <p class="card-text text-muted">{{ course.course_description }}</p>
+          <p><strong>Instructor:</strong> {{ course.teacher }}</p>
+          <a
+            href="{% url 'courses:detail' pk=course.pk %}"
+            class="btn btn-primary"
+            >More Info</a
+          >
+          <a
+            href="{% url 'courses:unenroll' pk=course.pk %}"
+            class="btn btn-danger"
+            >Unenroll</a
+          >
+        </div>
+      </div>
+    </div>
+    {% endif %} {% empty %}
+    <div class="alert alert-warning">
+      You have not enrolled in any courses yet.
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %} {% else %}
+  <div class="alert alert-danger">You cannot access this profile.</div>
+  {% endif %}
+</div>
 {% endblock body_content %}
-    

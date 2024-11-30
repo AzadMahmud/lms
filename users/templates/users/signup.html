@@ -3,16 +3,25 @@
 
 {% block title %}
     LMS - Signup
-{% endblock title %}  
-
+{% endblock title %}
 
 {% block body_content %}
-    <div class="container">
-        <h1>Sign Up</h1>
-        <form method="POST">
-            {% csrf_token %}
-            {% bootstrap_form form %}
-            <input type="submit" class="btn btn-success" value="Sign Up">
-        </form>
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="card shadow-lg p-4" style="width: 100%; max-width: 400px;">
+            <div class="text-center mb-4">
+                <h1 class="h3">Sign Up</h1>
+                <p class="text-muted">Create your account to get started</p>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success btn-lg">Sign Up</button>
+                </div>
+            </form>
+            <p class="text-center mt-3">
+                Already have an account? <a href="{% url 'users:login' %}" class="text-decoration-none">Log In</a>
+            </p>
+        </div>
     </div>
 {% endblock body_content %}

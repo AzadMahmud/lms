@@ -4,22 +4,20 @@
 {% block title_name %}
     LMS - Create Course
 {% endblock title_name %}
-    
 
 {% block main_content %}
-    <h1>Create new Course</h1>
-    
+<h1>Create New Course</h1>
+<div class="mt-4">
     {% if user_type == 2 %}
-        <form action="{% url 'courses:create' %}" method="POST">
-            {% csrf_token %}
-            {% bootstrap_form form %}
-            <input type="submit" value="Create" class="btn btn-success btn-lg">
-        </form>
+    <form action="{% url 'courses:create' %}" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-success">Create</button>
+    </form>
     {% else %}
-        <div class="jumbotron">
-            <h2>Oops! You need to be Teacher to access this page.</h2>
-        </div>
+    <div class="alert alert-warning">
+        <h4>Oops! You need to be a Teacher to access this page.</h4>
+    </div>
     {% endif %}
-        
+</div>
 {% endblock main_content %}
-    
